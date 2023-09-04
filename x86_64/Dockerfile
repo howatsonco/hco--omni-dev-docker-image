@@ -1,6 +1,8 @@
 FROM ubuntu
 
-RUN apt-get update && apt-get install -y apt-transport-https software-properties-common wget apt-utils gnupg2 curl sudo && \
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y apt-transport-https software-properties-common tzdata wget apt-utils gnupg2 curl sudo && \
         install -m 0755 -d /etc/apt/keyrings && \
         curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg && \
         chmod a+r /etc/apt/keyrings/docker.gpg && \
@@ -63,6 +65,7 @@ RUN apt-get update \
 	tar -xvf apache-maven-3.6.3-bin.tar.gz && \
 	mv apache-maven-3.6.3 /opt/ && \
     rm -rf apache-maven-3.6.3-bin.tar.gz && \
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh && \
     apt-get clean
 
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
