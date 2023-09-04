@@ -65,7 +65,7 @@ RUN apt-get update \
 	tar -xvf apache-maven-3.6.3-bin.tar.gz && \
 	mv apache-maven-3.6.3 /opt/ && \
     rm -rf apache-maven-3.6.3-bin.tar.gz && \
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh && \
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && \
     apt-get clean
 
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
@@ -84,4 +84,4 @@ USER ${USER}
 WORKDIR /home/${USER}
 
 RUN echo 'M2_HOME=/opt/apache-maven-3.6.3' >> ~/.zshrc && \
-    echo 'PATH="$M2_HOME/bin:$PATH"' >> ~/.zshrc
+    echo 'PATH="$M2_HOME/bin:$PATH:/usr/lib/dart/bin"' >> ~/.zshrc
