@@ -1,6 +1,7 @@
 FROM ubuntu
 
 ARG DEBIAN_FRONTEND=noninteractive
+ARG TZ=Australia/Melbourne
 
 RUN apt-get update && apt-get install -y apt-transport-https software-properties-common tzdata wget apt-utils gnupg2 curl sudo && \
         install -m 0755 -d /etc/apt/keyrings && \
@@ -51,6 +52,7 @@ RUN apt-get update \
         postgresql-client \
         python3 python3-pip \
         rclone \
+        screen \
         terraform \
         tmux \
         vim \
@@ -61,10 +63,10 @@ RUN apt-get update \
         && curl -sSL https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o /tmp/miniconda.sh && \
     bash /tmp/miniconda.sh -bfp /usr/local && \
     rm -rf /tmp/miniconda.sh && \
-	wget https://mirrors.estointernet.in/apache/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz && \
-	tar -xvf apache-maven-3.6.3-bin.tar.gz && \
-	mv apache-maven-3.6.3 /opt/ && \
-    rm -rf apache-maven-3.6.3-bin.tar.gz && \
+	wget https://dlcdn.apache.org/maven/maven-3/3.9.5/binaries/apache-maven-3.9.5-bin.tar.gz && \
+	tar -xvf apache-maven-3.9.5-bin.tar.gz && \
+	mv apache-maven-3.9.5 /opt/ && \
+    rm -rf apache-maven-3.9.5-bin.tar.gz && \
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && \
     apt-get clean
 
@@ -73,9 +75,6 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2
     ./aws/install && \
     rm -rf ./aws && rm awscliv2.zip
 
-ENV DEBIAN_FRONTEND=noninteractive
-ENV TZ=Australia/Melbourne
-
 ARG USER=coder
 RUN useradd --groups sudo,docker --no-create-home --shell /usr/bin/zsh ${USER} \
         && echo "${USER} ALL=(ALL) NOPASSWD:ALL" >/etc/sudoers.d/${USER} \
@@ -83,5 +82,5 @@ RUN useradd --groups sudo,docker --no-create-home --shell /usr/bin/zsh ${USER} \
 USER ${USER}
 WORKDIR /home/${USER}
 
-RUN echo 'M2_HOME=/opt/apache-maven-3.6.3' >> ~/.zshrc && \
+RUN echo 'M2_HOME=/opt/apache-maven-3.9.5' >> ~/.zshrc && \
     echo 'PATH="$M2_HOME/bin:$PATH:/usr/lib/dart/bin"' >> ~/.zshrc
