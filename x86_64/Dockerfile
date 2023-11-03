@@ -29,10 +29,11 @@ RUN apt-get update \
         && apt-get install -y \
         aria2 \
         busybox \
+        cloc \
         dart \
+        dnsutils \
         docker-ce docker-ce-cli containerd.io \
         dotnet-sdk-7.0 \
-        cloc \
         exa \
         git \
         golang \
@@ -48,12 +49,13 @@ RUN apt-get update \
         openjdk-11-jdk \
         openssh-client \
         php php-cli php-cgi php-mysql php-pgsql \
-        powershell \
         postgresql-client \
+        powershell \
         python3 python3-pip \
         rclone \
         screen \
         terraform \
+        time \
         tmux \
         vim \
         wget \
@@ -70,10 +72,22 @@ RUN apt-get update \
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && \
     apt-get clean
 
+# Install AWS CLI
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
     unzip awscliv2.zip && \
     ./aws/install && \
     rm -rf ./aws && rm awscliv2.zip
+
+# Install AZ Copy
+RUN wget "https://aka.ms/downloadazcopy-v10-linux" -O azcopy.tar.gz && \
+    tar -xf azcopy.tar.gz && \
+    mv azcopy_linux_amd64_*/azcopy /usr/local/bin/ && \
+    rm -rf azcopy_linux_amd64_* && rm azcopy.tar.gz
+
+# Install kubectl
+RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
+    install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
+    rm kubectl
 
 ARG USER=coder
 RUN useradd --groups sudo,docker --no-create-home --shell /usr/bin/zsh ${USER} \
@@ -83,4 +97,15 @@ USER ${USER}
 WORKDIR /home/${USER}
 
 RUN echo 'M2_HOME=/opt/apache-maven-3.9.5' >> ~/.zshrc && \
-    echo 'PATH="$M2_HOME/bin:$PATH:/usr/lib/dart/bin"' >> ~/.zshrc
+    echo 'PATH="$M2_HOME/bin:$PATH:/usr/lib/dart/bin"' >> ~/.zshrc \
+    echo 'alias la="ls -la"' >> ~/.zshrc && \
+    echo 'alias tf=terraform' >> ~/.zshrc && \
+    echo 'alias k=kubectl' >> ~/.zshrc && \
+    echo 'alias kga="kubectl get all"' >> ~/.zshrc && \
+    echo 'alias kgn="kubectl get nodes"' >> ~/.zshrc && \
+    echo 'alias kgs="kubectl get svc"' >> ~/.zshrc && \
+    echo 'alias kgp="kubectl get pods"' >> ~/.zshrc && \
+    echo 'alias kgd="kubectl get deploy"' >> ~/.zshrc && \
+    echo 'alias kgcm="kubectl get cm"' >> ~/.zshrc && \
+    echo 'alias kgsec="kubectl get secret"' >> ~/.zshrc && \
+    echo 'alias kgns="kubectl get ns"' >> ~/.zshrc
