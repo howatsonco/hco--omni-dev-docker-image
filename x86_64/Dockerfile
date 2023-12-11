@@ -33,7 +33,7 @@ RUN apt-get update \
         dart \
         dnsutils \
         docker-ce docker-ce-cli containerd.io \
-        dotnet-sdk-7.0 \
+        dotnet-sdk-8.0 \
         exa \
         git \
         golang \
@@ -61,6 +61,7 @@ RUN apt-get update \
         wget \
         zsh \
         && curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash \
+	&& curl -fsSL https://d2lang.com/install.sh | sh -s -- \
         && rm -rf /var/lib/apt/lists/* \
         && curl -sSL https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o /tmp/miniconda.sh && \
     bash /tmp/miniconda.sh -bfp /usr/local && \
