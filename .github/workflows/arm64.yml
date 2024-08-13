@@ -11,7 +11,7 @@ env:
   DOCKER_FILE: arm64
 jobs:
   arm64build:
-    runs-on: docker-arm
+    runs-on: [docker, self-hosted, linux, ARM64]
     permissions:
       packages: write
       contents: read
