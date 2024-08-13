@@ -34,6 +34,7 @@ RUN apt-get update \
     dnsutils \
     docker-ce docker-ce-cli containerd.io \
     dotnet-sdk-8.0 \
+    direnv \
     exa \
     git \
     golang \
