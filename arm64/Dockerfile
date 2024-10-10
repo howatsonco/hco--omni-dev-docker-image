@@ -51,7 +51,6 @@ RUN apt-get update \
     nodejs npm \
     openjdk-11-jdk \
     openssh-client \
-    oxipng \
     php php-cli php-cgi php-mysql php-pgsql \
     postgresql-client \
     powershell \
