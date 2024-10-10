@@ -7,8 +7,8 @@ An opinionated base docker image that attempts to have all of the most popular S
     - Node.JS (still recommend you use `nvm` locally)
     - Python3 and Conda environment
     - PHP
-    - Dotnet SDK 7
-    - OpenJDK 11 & Maven 3.6
+    - Dotnet SDK 8
+    - OpenJDK 11 & Maven 3.9
     - Golang
     - Rust
 - Cloud CLIs:

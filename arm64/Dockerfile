@@ -19,6 +19,11 @@ RUN apt-get update && apt-get install -y apt-transport-https software-properties
     "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
     "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
     tee /etc/apt/sources.list.d/docker.list > /dev/null && \
+    (type -p wget >/dev/null || (sudo apt update && sudo apt-get install wget -y)) \
+    && sudo mkdir -p -m 755 /etc/apt/keyrings \
+    && wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
+    && sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
     wget -q "https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/packages-microsoft-prod.deb" && \
     dpkg -i packages-microsoft-prod.deb && \
     rm packages-microsoft-prod.deb
@@ -46,6 +51,7 @@ RUN apt-get update \
     nodejs npm \
     openjdk-11-jdk \
     openssh-client \
+    oxipng \
     php php-cli php-cgi php-mysql php-pgsql \
     postgresql-client \
     powershell \
@@ -64,10 +70,10 @@ RUN apt-get update \
     && curl -sSL https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o /tmp/miniconda.sh && \
     bash /tmp/miniconda.sh -bfp /usr/local && \
     rm -rf /tmp/miniconda.sh && \
-    wget https://dlcdn.apache.org/maven/maven-3/3.9.8/binaries/apache-maven-3.9.8-bin.tar.gz && \
-    tar -xvf apache-maven-3.9.8-bin.tar.gz && \
-    mv apache-maven-3.9.8 /opt/ && \
-    rm -rf apache-maven-3.9.8-bin.tar.gz && \
+    wget https://dlcdn.apache.org/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz && \
+    tar -xvf apache-maven-3.9.9-bin.tar.gz && \
+    mv apache-maven-3.9.9 /opt/ && \
+    rm -rf apache-maven-3.9.9-bin.tar.gz && \
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && \
     apt-get clean
 
@@ -89,7 +95,7 @@ RUN useradd --groups sudo,docker --no-create-home --shell /usr/bin/zsh ${USER} \
 USER ${USER}
 WORKDIR /home/${USER}
 
-RUN echo 'M2_HOME=/opt/apache-maven-3.9.8' >> ~/.zshrc && \
+RUN echo 'M2_HOME=/opt/apache-maven-3.9.9' >> ~/.zshrc && \
     echo 'PATH="$M2_HOME/bin:$PATH:/usr/lib/dart/bin"' >> ~/.zshrc \
     echo 'alias la="ls -la"' >> ~/.zshrc && \
     echo 'alias tf=terraform' >> ~/.zshrc && \
