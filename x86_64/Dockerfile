@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG TZ=Australia/Melbourne
@@ -29,6 +29,7 @@ RUN apt-get update && apt-get install -y apt-transport-https software-properties
 RUN apt-get update \
     && apt-get install -y \
     aria2 \
+    btop \
     busybox \
     cloc \
     dart \
@@ -36,7 +37,6 @@ RUN apt-get update \
     docker-ce docker-ce-cli containerd.io \
     dotnet-sdk-8.0 \
     direnv \
-    exa \
     git \
     golang \
     google-cloud-cli \
@@ -68,10 +68,10 @@ RUN apt-get update \
     && curl -sSL https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o /tmp/miniconda.sh && \
     bash /tmp/miniconda.sh -bfp /usr/local && \
     rm -rf /tmp/miniconda.sh && \
-    wget https://dlcdn.apache.org/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz && \
-    tar -xvf apache-maven-3.9.9-bin.tar.gz && \
-    mv apache-maven-3.9.9 /opt/ && \
-    rm -rf apache-maven-3.9.9-bin.tar.gz && \
+    wget https://dlcdn.apache.org/maven/maven-3/3.9.10/binaries/apache-maven-3.9.10-bin.tar.gz && \
+    tar -xvf apache-maven-3.9.10-bin.tar.gz && \
+    mv apache-maven-3.9.10 /opt/ && \
+    rm -rf apache-maven-3.9.10-bin.tar.gz && \
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && \
     apt-get clean
 
@@ -99,7 +99,7 @@ RUN useradd --groups sudo,docker --no-create-home --shell /usr/bin/zsh ${USER} \
 USER ${USER}
 WORKDIR /home/${USER}
 
-RUN echo 'M2_HOME=/opt/apache-maven-3.9.9' >> ~/.zshrc && \
+RUN echo 'M2_HOME=/opt/apache-maven-3.9.10' >> ~/.zshrc && \
     echo 'PATH="$M2_HOME/bin:$PATH:/usr/lib/dart/bin"' >> ~/.zshrc \
     echo 'alias la="ls -la"' >> ~/.zshrc && \
     echo 'alias tf=terraform' >> ~/.zshrc && \
