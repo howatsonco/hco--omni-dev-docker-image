@@ -24,7 +24,6 @@ An opinionated base docker image that attempts to have all of the most popular S
 - Added in a few utilities for day to day operations
   - `aria2`
   - `cloc`
-  - `exa`
   - `jq`
   - `imagemagick`
   - `ncdu`

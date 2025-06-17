@@ -1,0 +1,32 @@
+on:   
+  push:
+    branches:
+      - main
+    tags:
+      - v*
+  pull_request:
+
+env:
+  IMAGE_NAME: hco--omni-dev-docker-image
+  DOCKER_FILE: x86_64.coder-base
+jobs:
+  x86_64build:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build image
+        run: |
+          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
+          # Change all uppercase to lowercase
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          # Strip git ref prefix from version
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          # Strip "v" prefix from tag name
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          echo "Building $IMAGE_ID:$DOCKER_FILE"
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          docker build . --file $DOCKER_FILE/Dockerfile --tag $IMAGE_ID:$DOCKER_FILE --label "runnumber=${GITHUB_RUN_ID}" --push
