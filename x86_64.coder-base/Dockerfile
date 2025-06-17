@@ -94,12 +94,10 @@ RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/s
     install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
     rm kubectl
 
+RUN usermod -aG sudo,docker coder
 ARG USER=coder
-RUN useradd --groups sudo,docker --no-create-home --shell /usr/bin/zsh ${USER} \
-    && echo "${USER} ALL=(ALL) NOPASSWD:ALL" >/etc/sudoers.d/${USER} \
-    && chmod 0440 /etc/sudoers.d/${USER}
-USER ${USER}
-WORKDIR /home/${USER}
+USER coder
+WORKDIR /home/coder
 
 RUN echo 'M2_HOME=/opt/apache-maven-3.9.10' >> ~/.zshrc && \
     echo 'PATH="$M2_HOME/bin:$PATH:/usr/lib/dart/bin"' >> ~/.zshrc \
